@@ -1,18 +1,24 @@
+"Set backspace prefs
+set backspace=2
+
 " Make tabs two spaces
 set tabstop=2
 set shiftwidth=2
 set expandtab
 
-" Mark a line at column 80
-if (exists('+colorcolumn'))
-  set colorcolumn=80
-  highlight ColorColumn ctermbg=9
-endif
+" Syntax Highlighting
+syntax on
 
 "Set color scheme
 colorscheme base16-ocean
 
-" Change iTerm profile from Default to Ocean when going in  and out of VIM
+" Mark a line at column 80
+if (exists('+colorcolumn'))
+  set colorcolumn=80
+  highlight ColorColumn ctermbg=16
+endif
+
+" Switch iTerm2 profile when opening vim
 if !has('gui_running')
   function! s:change_iterm2_profile()
     call system('echo -e "\033]50;SetProfile=Ocean\a" > /dev/tty')
