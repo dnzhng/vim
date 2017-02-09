@@ -25,6 +25,10 @@ if (exists('+colorcolumn'))
   highlight ColorColumn ctermbg=16
 endif
 
+" Vim-Airline settings
+set laststatus=2 
+let g:airline_theme='base16_ocean'
+
 " Set Line numbers
 set number
 highlight LineNr ctermbg=16
