@@ -5,6 +5,9 @@
 " Updating packages
 " git submodule update --remote --merge
 
+" Show commands
+set showcmd
+
 "Set backspace prefs
 set backspace=2
 
