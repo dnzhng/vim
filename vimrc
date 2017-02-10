@@ -36,6 +36,13 @@ let g:airline_theme='luna'
 set number
 highlight LineNr ctermbg=16
 
+" GitGutter settings
+highlight clear SignColumn
+highlight GitGutterAdd ctermbg=2
+highlight GitGutterChange ctermbg=3
+highlight GitGutterDelete ctermbg=1
+highlight GitGutterChangeDelete ctermbg=3
+
 " Switch iTerm2 profile when opening vim
 if !has('gui_running')
   function! s:change_iterm2_profile()
