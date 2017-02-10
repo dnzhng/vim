@@ -27,7 +27,7 @@ endif
 
 " Vim-Airline settings
 set laststatus=2 
-let g:airline_theme='base16_ocean'
+let g:airline_theme='luna'
 
 " Set Line numbers
 set number
