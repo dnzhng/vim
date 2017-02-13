@@ -5,6 +5,11 @@
 " Updating packages
 " git submodule update --remote --merge
 
+" Set leader commands
+let mapleader = "\<Space>"
+nnoremap <silent> <Leader>p :call fzf#run({
+  \'down': '20%', 'sink': 'vertical botright split' })<CR>
+
 " Show commands
 set showcmd
 
