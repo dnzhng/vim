@@ -9,6 +9,8 @@
 let mapleader = "\<Space>"
 nnoremap <silent> <Leader>p :call fzf#run({
   \'down': '20%', 'sink': 'vertical botright split' })<CR>
+nnoremap <silent> <Leader>w :q<Enter>
+nnoremap <silent> <Leader>s :w<Enter>
 
 " Show commands
 set showcmd
