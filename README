@@ -1,1 +1,12 @@
 Vim config files
+
+## Color scheme and Profile
+When using iTerm2, create a profile named `Ocean`.
+Add the provided itermcolor profile.
+
+## Init vim packages
+after cloning into `~/.vim` run
+```
+$ git submodule init
+$ git submodule update
+```
