@@ -54,10 +54,16 @@ highlight GitGutterChangeDelete ctermbg=3
 
 " Switch iTerm2 profile when opening vim
 if !has('gui_running')
-  function! s:change_iterm2_profile()
-    call system('echo -e "\033]50;SetProfile=Ocean\a" > /dev/tty')
+  function! s:change_iterm2_profile(profile)
+    if exists('$TMUX')
+      " Wrap escape sequence for tmux passthrough
+      let l:seq = "\<Esc>Ptmux;\<Esc>\<Esc>]50;SetProfile=" . a:profile . "\x07\<Esc>\\"
+    else
+      let l:seq = "\<Esc>]50;SetProfile=" . a:profile . "\x07"
+    endif
+    call writefile([l:seq], '/dev/tty', 'b')
   endfunction
-  autocmd vimenter,colorscheme * call s:change_iterm2_profile()
-  autocmd vimleave * call system('echo -e "\033]50;SetProfile=Default\a" > /dev/tty')
+  autocmd vimenter,colorscheme * call s:change_iterm2_profile('Ocean')
+  autocmd vimleave * call s:change_iterm2_profile('Default')
 endif
 
