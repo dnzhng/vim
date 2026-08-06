@@ -1,3 +1,11 @@
+================================================================================
+  MOVED — use my dotfiles repo instead of this one.
+
+  This Vim config now lives in https://github.com/dnzhng/dotfiles under vim/.
+  Set it up there with:  vim/install.sh
+  This repository is kept for history only and is no longer maintained.
+================================================================================
+
 Vim config files
 
 ## Color scheme and Profile
