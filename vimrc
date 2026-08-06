@@ -52,18 +52,44 @@ highlight GitGutterChange ctermbg=3
 highlight GitGutterDelete ctermbg=1
 highlight GitGutterChangeDelete ctermbg=3
 
-" Switch iTerm2 profile when opening vim
+" Swap the terminal's ANSI palette to base16-ocean while editing, then restore
+" on exit. base16-ocean renders against the terminal's colors (cterm mode, no
+" termguicolors), so the palette has to match the colorscheme.
+"
+" Uses standard OSC sequences (OSC 4 = palette, 10/11/12 = fg/bg/cursor) via
+" echoraw(), so it works in any modern terminal — WezTerm, iTerm2, etc. This
+" replaces the old iTerm2-only `SetProfile=Ocean` escape, which WezTerm ignores.
+" Inside tmux the sequences are wrapped in DCS passthrough so they reach the
+" outer terminal (needs `set -g allow-passthrough on`, which tmux.conf sets).
 if !has('gui_running')
-  function! s:change_iterm2_profile(profile)
+  " base16-ocean mapped into the 16 ANSI slots (matches the iTerm2 Ocean
+  " profile this used to switch to).
+  let s:ocean_colors =
+    \ "\033]4;0;#2b303b;1;#bf616a;2;#a3be8c;3;#ebcb8b;4;#8fa1b3;5;#b48ead"
+    \ . ";6;#96b5b4;7;#c0c5ce;8;#65737e;9;#bf616a;10;#a3be8c;11;#ebcb8b"
+    \ . ";12;#8fa1b3;13;#b48ead;14;#96b5b4;15;#eff1f5\007"
+    \ . "\033]10;#c0c5ce\007\033]11;#2b303b\007\033]12;#c0c5ce\007"
+  " Reset palette + fg/bg/cursor back to the terminal's configured defaults.
+  let s:reset_colors = "\033]104\007\033]110\007\033]111\007\033]112\007"
+
+  function! s:emit_term_colors(seq) abort
+    " Inside tmux, wrap in the DCS passthrough sequence so the OSC codes reach
+    " the outer terminal; every embedded ESC must be doubled.
+    let l:seq = a:seq
     if exists('$TMUX')
-      " Wrap escape sequence for tmux passthrough
-      let l:seq = "\<Esc>Ptmux;\<Esc>\<Esc>]50;SetProfile=" . a:profile . "\x07\<Esc>\\"
-    else
-      let l:seq = "\<Esc>]50;SetProfile=" . a:profile . "\x07"
+      let l:seq = "\033Ptmux;" . substitute(a:seq, "\033", "\033\033", 'g') . "\033\\"
     endif
-    call writefile([l:seq], '/dev/tty', 'b')
+    if exists('*echoraw')
+      call echoraw(l:seq)
+    else
+      call writefile([l:seq], '/dev/tty', 'b')
+    endif
   endfunction
-  autocmd vimenter,colorscheme * call s:change_iterm2_profile('Ocean')
-  autocmd vimleave * call s:change_iterm2_profile('Default')
+
+  augroup term_theme_switch
+    autocmd!
+    autocmd VimEnter,ColorScheme * call s:emit_term_colors(s:ocean_colors)
+    autocmd VimLeave * call s:emit_term_colors(s:reset_colors)
+  augroup END
 endif
 
